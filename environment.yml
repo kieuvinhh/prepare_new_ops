@@ -1,0 +1,9 @@
+name: prepare_new_ops
+dependencies:
+  - python=3.8
+  - pandas
+  - pytest
+  - pyarrow
+  - pip:
+      - pyspark
+
