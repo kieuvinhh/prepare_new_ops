@@ -1,6 +1,6 @@
-name: Python Package using Conda
+name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -23,8 +23,18 @@ jobs:
         environment-file: environment.yml
         activate-environment: prepare_new_ops
 
-    - name: Run tests
+    - name: Verify Conda environment
       run: |
+        conda info
+        conda list
+
+    - name: Run tests
+      shell: bash -l {0}
+      run: |
+        source $(conda info --base)/etc/profile.d/conda.sh
+        conda activate prepare_new_ops
+        conda install pytest
+        cd unit_test
         pytest --rootdir=.
 
     - name: Clean up
