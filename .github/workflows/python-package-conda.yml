@@ -18,8 +18,20 @@ jobs:
         environment-file: environment.yml
         activate-environment: prepare_new_ops
 
+    - name: Verify Conda environment
+      run: |
+        conda info
+        conda list
+
     - name: Run pytest
       run: |
-        conda activate prepare_new_ops
-        cd unit_test
-        pytest --rootdir=/unit_test/*
+        # Source Conda profile script to enable Conda commands
+        source $(conda info --base)/etc/profile.d/conda.sh
+        
+        # Run pytest within the Conda environment
+        pytest --rootdir=unit_test
+
+    - name: Clean up
+      run: |
+        conda deactivate
+        conda env remove -n prepare_new_ops
