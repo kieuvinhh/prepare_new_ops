@@ -1,5 +1,5 @@
 import pandas as pd
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType
+# from pyspark.sql.types import StructType, StructField, IntegerType, StringType
 
 # Define the schema for each table
 dim_order_item_table_schema = {
@@ -40,15 +40,15 @@ dim_shipping_table_schema = {
     "Shippingdate": "str"
 }
 
-dim_customer_schema = StructType([
-    StructField("CustomerId", IntegerType(), True),
-    StructField("CustomerZipcode", IntegerType(), True),
-    StructField("CustomerFname", StringType(), True),
-    StructField("CustomerEmail", StringType(), True),
-    StructField("CustomerLname", StringType(), True),
-    StructField("CustomerPassword", StringType(), True),
-    StructField("CustomerSegment", StringType(), True)
-])
+# dim_customer_schema = StructType([
+#     StructField("CustomerId", IntegerType(), True),
+#     StructField("CustomerZipcode", IntegerType(), True),
+#     StructField("CustomerFname", StringType(), True),
+#     StructField("CustomerEmail", StringType(), True),
+#     StructField("CustomerLname", StringType(), True),
+#     StructField("CustomerPassword", StringType(), True),
+#     StructField("CustomerSegment", StringType(), True)
+# ])
 
 dim_customer_detail_table_schema = {
     "CustomerId": "int",
@@ -103,7 +103,7 @@ parquet_files = {
 
 
 def transform_dim_customer(fileName, schema, file_path):
-    df = pd.read_parquet(f"data/silver/{fileName}", engine="pyarrow")
+    df = pd.read_parquet(f"data/silver/{fileName}", engine="pyarrow").drop_duplicates()
     df = apply_schema(df, schema)
     df = df[schema.keys()]
     new_file_path = f"data/gold/{file_path}"
