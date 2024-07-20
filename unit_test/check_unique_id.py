@@ -2,9 +2,6 @@ import unittest
 
 import pandas as pd
 import os
-from pyspark.sql import SparkSession
-
-spark = SparkSession.builder.appName("check_unique_id").getOrCreate()
 
 
 class DataframeTest(unittest.TestCase):
