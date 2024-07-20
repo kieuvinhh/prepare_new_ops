@@ -108,7 +108,7 @@ transform_dim_customer("Customer_Table.parquet",
 transform_dim_customer("Customer_Table.parquet",
                        dim_customer_location_table_schema,
                        "dim_customer_location_table.parquet",
-                       "CustomerId")
+                       "CustomerZipcode")
 transform_dim_customer("Orders_Table.parquet",
                        dim_order_item_table_schema,
                        "dim_order_item_table.parquet",
