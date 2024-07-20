@@ -15,13 +15,7 @@ jobs:
       with:
         python-version: '3.8'
 
-    - name: Run tests
+    - name: Run pytest
       run: |
         conda install pytest
-        cd unit_test
-        pytest --rootdir=unit_test
-
-    - name: Clean up
-      run: |
-        conda deactivate
-        conda env remove -n prepare_new_ops
+        pytest --rootdir=/unit_test
