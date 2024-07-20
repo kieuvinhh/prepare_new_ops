@@ -15,27 +15,11 @@ jobs:
       with:
         python-version: '3.8'
 
-    - name: Install Conda
-      uses: conda-incubator/setup-miniconda@v2
-      with:
-        auto-update-conda: true
-        python-version: '3.8'
-        environment-file: environment.yml
-        activate-environment: prepare_new_ops
-
-    - name: Verify Conda environment
-      run: |
-        conda info
-        conda list
-
     - name: Run tests
-      shell: bash -l {0}
       run: |
-        source $(conda info --base)/etc/profile.d/conda.sh
-        conda activate prepare_new_ops
         conda install pytest
         cd unit_test
-        pytest --rootdir=.
+        pytest --rootdir=unit_test
 
     - name: Clean up
       run: |
