@@ -3,7 +3,7 @@ import pandas as pd
 
 # Define the schema for each table
 dim_order_item_table_schema = {
-    "OrderItemId": "int",
+    "OrderItemId": "str",
     "OrderItemProductPrice": "float",
     "OrderItemCardprodId": "int",
     "OrderItemDiscountRate": "float",
@@ -12,7 +12,7 @@ dim_order_item_table_schema = {
 }
 
 dim_order_detail_table_schema = {
-    "OrderId": "int",
+    "OrderId": "str",
     "OrderItemId": "int",
     "OrderCountry": "str",
     "OrderCity": "str",
@@ -24,7 +24,7 @@ dim_order_detail_table_schema = {
 }
 
 fact_order_table_schema = {
-    "OrderId": "int",
+    "OrderId": "str",
     "OrderCustomer_Id": "int",
     "OrderItem_Total": "float",
     "OrderProfitPerOrder": "float",
@@ -33,25 +33,15 @@ fact_order_table_schema = {
 }
 
 dim_shipping_table_schema = {
-    "OrderId": "int",
+    "OrderId": "str",
     "DaysForShipping": "int",
     "DaysForShipment": "int",
     "DeliveryStatus": "str",
-    "Shippingdate": "str"
+    "Shippingdate": "datetime64[ns]"
 }
 
-# dim_customer_schema = StructType([
-#     StructField("CustomerId", IntegerType(), True),
-#     StructField("CustomerZipcode", IntegerType(), True),
-#     StructField("CustomerFname", StringType(), True),
-#     StructField("CustomerEmail", StringType(), True),
-#     StructField("CustomerLname", StringType(), True),
-#     StructField("CustomerPassword", StringType(), True),
-#     StructField("CustomerSegment", StringType(), True)
-# ])
-
 dim_customer_detail_table_schema = {
-    "CustomerId": "int",
+    "CustomerId": "str",
     "CustomerZipcode": "int",
     "CustomerFname": "str",
     "CustomerEmail": "str",
@@ -67,7 +57,7 @@ dim_customer_location_table_schema = {
 }
 
 dim_date_table_schema = {
-    "Date": "str",
+    "Date": "int",
     "Month": "int",
     "Day": "int",
     "Day_of_week": "int",
@@ -102,9 +92,9 @@ parquet_files = {
 }
 
 
-def transform_dim_customer(fileName, schema, file_path):
-    df = pd.read_parquet(f"data/silver/{fileName}", engine="pyarrow").drop_duplicates()
-    df = apply_schema(df, schema)
+def transform_dim_customer(fileName, schema, file_path, id_col):
+    df = pd.read_parquet(f"data/silver/{fileName}", engine="pyarrow")
+    df = apply_schema(df, schema).drop_duplicates(id_col)
     df = df[schema.keys()]
     new_file_path = f"data/gold/{file_path}"
     df.to_parquet(new_file_path, engine='pyarrow', index=False)
@@ -112,15 +102,25 @@ def transform_dim_customer(fileName, schema, file_path):
 
 
 transform_dim_customer("Customer_Table.parquet",
-                       dim_customer_detail_table_schema, "dim_customer_detail_table.parquet")
-
+                       dim_customer_detail_table_schema,
+                       "dim_customer_detail_table.parquet",
+                       "CustomerId")
 transform_dim_customer("Customer_Table.parquet",
-                       dim_customer_location_table_schema, "dim_customer_location_table.parquet")
+                       dim_customer_location_table_schema,
+                       "dim_customer_location_table.parquet",
+                       "CustomerId")
 transform_dim_customer("Orders_Table.parquet",
-                       dim_order_item_table_schema, "dim_order_item_table.parquet")
+                       dim_order_item_table_schema,
+                       "dim_order_item_table.parquet",
+                       "OrderId")
 transform_dim_customer("Orders_Table.parquet",
-                       dim_order_detail_table_schema, "dim_order_detail_table.parquet")
+                       dim_order_detail_table_schema,
+                       "dim_order_detail_table.parquet",
+                       "OrderId")
 transform_dim_customer("Orders_Table.parquet",
-                       dim_shipping_table_schema, "dim_shipping_table.parquet")
-# transform_dim_customer("Order_Table.parquet",
-#                        dim_date_table_schema, "dim_date_table.parquet")
+                       dim_shipping_table_schema, "dim_shipping_table.parquet",
+                       "OrderId")
+# transform_dim_customer("Orders_Table.parquet",
+#                        dim_date_table_schema,
+#                        "dim_date_table.parquet",
+#                        "OrderId")
