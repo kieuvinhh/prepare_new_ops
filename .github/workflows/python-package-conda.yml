@@ -33,4 +33,4 @@ jobs:
         cd unit_test
         
         # Run pytest
-        pytest --rootdir=/unit_test
+        pytest --rootdir=.
