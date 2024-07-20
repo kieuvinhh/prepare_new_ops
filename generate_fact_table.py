@@ -51,7 +51,7 @@ new_column_names_order = {
 
 # Select and rename columns for fact order table
 df_order_fact = df[list(new_column_names_order.keys())].rename(columns=new_column_names_order)
-df_order_fact = apply_schema(df_order_fact, fact_order_table_schema)
+df_order_fact = apply_schema(df_order_fact, fact_order_table_schema).drop_duplicates()
 
 # Rename columns for fact product table
 new_column_names_product = {
@@ -63,7 +63,7 @@ new_column_names_product = {
 
 # Select and rename columns for fact product table
 df_product_fact = df[list(new_column_names_product.keys())].rename(columns=new_column_names_product)
-df_product_fact = apply_schema(df_product_fact, fact_product_table_schema)
+df_product_fact = apply_schema(df_product_fact, fact_product_table_schema).drop_duplicates()
 
 # Save the modified DataFrame to a Parquet file
 parquet_file_path_order = '/Users/vinhnk1/Desktop/COSCO/COSTCO/data/gold/fact_order_table.parquet'  # Replace with your desired Parquet file path
