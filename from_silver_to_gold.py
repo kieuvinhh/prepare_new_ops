@@ -94,7 +94,7 @@ parquet_files = {
 
 def transform_dim_customer(fileName, schema, file_path, id_col):
     df = pd.read_parquet(f"data/silver/{fileName}", engine="pyarrow")
-    df = apply_schema(df, schema).drop_duplicates(id_col)
+    df = apply_schema(df, schema).drop_duplicates(subset=[id_col])
     df = df[schema.keys()]
     new_file_path = f"data/gold/{file_path}"
     df.to_parquet(new_file_path, engine='pyarrow', index=False)
