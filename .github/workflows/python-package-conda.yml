@@ -10,12 +10,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Set up Conda
+      uses: conda-incubator/setup-miniconda@v2
       with:
+        auto-update-conda: true
         python-version: '3.8'
+        environment-file: environment.yml
+        activate-environment: prepare_new_ops
+
+    - name: Verify Conda environment
+      run: |
+        conda info
+        conda list
 
     - name: Run pytest
       run: |
-        conda install pytest
+        # Ensure Conda environment is activated
+        source $(conda info --base)/etc/profile.d/conda.sh
+        conda activate prepare_new_ops
+        
+        # Navigate to the unit_test directory
+        cd unit_test
+        
+        # Run pytest
         pytest --rootdir=/unit_test
