@@ -1,4 +1,4 @@
-name: unit_test
+name: prepare_new_ops
 dependencies:
   - python=3.8
   - pandas
@@ -6,4 +6,3 @@ dependencies:
   - pyarrow
   - pip:
       - pyspark
-
