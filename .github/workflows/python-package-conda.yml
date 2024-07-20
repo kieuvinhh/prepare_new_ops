@@ -27,7 +27,7 @@ jobs:
       run: |
         # Source Conda profile script to enable Conda commands
         source $(conda info --base)/etc/profile.d/conda.sh
-        conda install pytest
+        pip install pytest
         # Run pytest within the Conda environment
         pytest --rootdir=unit_test/*
 
