@@ -1,4 +1,4 @@
-name: prepare_new_ops
+name: unit_test
 dependencies:
   - python=3.8
   - pandas
