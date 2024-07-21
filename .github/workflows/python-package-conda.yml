@@ -37,8 +37,3 @@ jobs:
         # Navigate to the unit_test directory and run pytest
         cd unit_test
         pytest *
-
-    - name: Clean up
-      run: |
-        conda deactivate
-        conda env remove -n prepare_new_ops
