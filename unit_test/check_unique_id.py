@@ -5,7 +5,7 @@ import os
 
 
 class DataframeTest(unittest.TestCase):
-    folder_gold_path = "/Users/vinhnk1/Desktop/COSCO/prepare_new_ops/data/gold"
+    folder_gold_path = "../data/gold"
 
     def test_unique_id(self):
         parquet_files = {
