@@ -36,7 +36,7 @@ jobs:
         
         # Navigate to the unit_test directory and run pytest
         cd unit_test
-        pytest .
+        pytest *
 
     - name: Clean up
       run: |
