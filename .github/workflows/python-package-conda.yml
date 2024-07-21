@@ -23,14 +23,20 @@ jobs:
         conda info
         conda list
 
+    - name: Set environment variables
+      run: echo "FOLDER_GOLD_PATH=$(pwd)/data/gold" >> $GITHUB_ENV
+
     - name: Run pytest
+      env:
+        FOLDER_GOLD_PATH: ${{ env.FOLDER_GOLD_PATH }}
       run: |
         # Source Conda profile script to enable Conda commands
         source $(conda info --base)/etc/profile.d/conda.sh
         conda activate prepare_new_ops
         
         # Navigate to the unit_test directory and run pytest
-        pytest unit_test/*
+        cd unit_test
+        pytest .
 
     - name: Clean up
       run: |
