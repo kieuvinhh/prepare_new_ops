@@ -1,6 +1,10 @@
-USE costco;
+USE [testdb]
 
-INSERT INTO Products_Table (
+-- BULK INSERT dbo.bronze_layer
+-- from '/Users/vinhnk1/Desktop/COSCO/prepare_new_ops/data/DataCoSupplyChainDataset.csv'
+-- WITH ( FORMAT = 'CSV');
+
+INSERT INTO dbo.Products_Table (
 	ProductCardId,
 	ProductCategoryId,
 	ProductDescription,
@@ -20,9 +24,9 @@ SELECT
 	ProductStatus,
 	CategoryId,
 	CategoryName
-FROM bronze_layer;
+FROM dbo.bronze_layer
 
-INSERT INTO Departments_Table (
+INSERT INTO dbo.Departments_Table (
 	DepartmentId, 
 	DepartmentName, 
 	Latitude, 
@@ -32,9 +36,9 @@ SELECT
 	DepartmentName, 
 	Latitude, 
 	Longitude
-FROM bronze_layer;
+FROM dbo.bronze_layer
 
-INSERT INTO Orders_Table (
+INSERT INTO dbo.Orders_Table (
 	OrderCity, 
 	OrderCountry,
 	OrderCustomerId,
@@ -90,10 +94,10 @@ SELECT
 	Market,
 	Shippingdate,
 	ShippingMode
-FROM bronze_layer;
+FROM dbo.bronze_layer
 
 
-INSERT INTO Customer_Table (
+INSERT INTO dbo.Customer_Table (
 	CustomeCity,
 	CustomerCountry, 
 	CustomerEmail, 
@@ -123,6 +127,6 @@ SELECT
 	Latitude, 
 	Longitude, 
 	SalesPerCustomer
-FROM bronze_layer;
+FROM dbo.bronze_layer
 
-show columns from bronze_layer;
+go

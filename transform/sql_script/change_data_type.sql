@@ -1,4 +1,4 @@
-ALTER TABLE bronze_layer
+ALTER TABLE [dbo].bronze_layer
 MODIFY Type TEXT,
 MODIFY DaysForShipping INT,
 MODIFY DaysForShipment INT,
