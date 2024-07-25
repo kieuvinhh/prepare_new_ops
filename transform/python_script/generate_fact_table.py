@@ -6,7 +6,7 @@ fact_order_table_schema = {
     "OrderCustomerId": "int",
     "OrderItemTotal": "float",
     "OrderProfitPerOrder": "float",
-    "Orderdate": "str",
+    "Orderdate": "string",
     "Sales": "float"
 }
 
@@ -20,22 +20,15 @@ def apply_schema(df, schema):
     for column, dtype in schema.items():
         if column in df.columns:
             if dtype == "int":
-                df[column] = pd.to_numeric(df[column], errors='coerce').fillna(0).astype(int)
+                df = df.withColumn(column, col(column).cast("integer"))
             elif dtype == "float":
-                df[column] = pd.to_numeric(df[column], errors='coerce').astype(float)
+                df = df.withColumn(column, col(column).cast("float"))
             else:
-                df[column] = df[column].astype(dtype)
+                df = df.withColumn(column, col(column).cast(dtype))
     return df
 
 # Read the CSV file
-csv_file_path = '/Users/vinhnk1/Desktop/COSCO/COSTCO/data/DataCoSupplyChainDataset.csv'  # Replace with the actual path
-encoding = 'latin1'  # Use the appropriate encoding
 
-try:
-    df = pd.read_csv(csv_file_path, encoding=encoding)
-except UnicodeDecodeError as e:
-    print(f"Encoding error: {e}")
-    # Optionally, you can handle the error or try a different encoding here
 
 # Rename columns for fact order table
 new_column_names_order = {

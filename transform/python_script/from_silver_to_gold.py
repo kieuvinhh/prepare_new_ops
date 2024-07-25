@@ -1,9 +1,15 @@
-import pandas as pd
-# from pyspark.sql.types import StructType, StructField, IntegerType, StringType
+container_name = "costcocontainer"
+storage_account = "costcodatastoragegen2"
+access_key = ""
+
+spark.conf.set("fs.azure.account.key.{0}.dfs.core.windows.net".format(storage_account), access_key)
+
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType
+from pyspark.sql.functions import col
 
 # Define the schema for each table
 dim_order_item_table_schema = {
-    "OrderItemId": "str",
+    "OrderItemId": "string",
     "OrderItemProductPrice": "float",
     "OrderItemCardprodId": "int",
     "OrderItemDiscountRate": "float",
@@ -12,48 +18,48 @@ dim_order_item_table_schema = {
 }
 
 dim_order_detail_table_schema = {
-    "OrderId": "str",
+    "OrderId": "string",
     "OrderItemId": "int",
-    "OrderCountry": "str",
-    "OrderCity": "str",
-    "Market": "str",
-    "OrderRegion": "str",
-    "OrderState": "str",
-    "OrderStatus": "str"
+    "OrderCountry": "string",
+    "OrderCity": "string",
+    "Market": "string",
+    "OrderRegion": "string",
+    "OrderState": "string",
+    "OrderStatus": "string"
 
 }
 
 fact_order_table_schema = {
-    "OrderId": "str",
+    "OrderId": "string",
     "OrderCustomer_Id": "int",
     "OrderItem_Total": "float",
     "OrderProfitPerOrder": "float",
-    "Orderdate": "str",  # Assuming date is stored as text, you can change it to datetime if needed
+    "Orderdate": "string",  # Assuming date is stored as text, you can change it to datetime if needed
     "Sales": "float"
 }
 
 dim_shipping_table_schema = {
-    "OrderId": "str",
+    "OrderId": "string",
     "DaysForShipping": "int",
     "DaysForShipment": "int",
-    "DeliveryStatus": "str",
-    "Shippingdate": "datetime64[ns]"
+    "DeliveryStatus": "string",
+    "Shippingdate": TimestampType()
 }
 
 dim_customer_detail_table_schema = {
-    "CustomerId": "str",
+    "CustomerId": "string",
     "CustomerZipcode": "int",
-    "CustomerFname": "str",
-    "CustomerEmail": "str",
-    "CustomerLname": "str",
-    "CustomerPassword": "str",
-    "CustomerSegment": "str"
+    "CustomerFname": "string",
+    "CustomerEmail": "string",
+    "CustomerLname": "string",
+    "CustomerPassword": "string",
+    "CustomerSegment": "string"
 }
 
 dim_customer_location_table_schema = {
     "CustomerZipcode": "int",
-    "CustomerState": "str",
-    "CustomerStreet": "str"
+    "CustomerState": "string",
+    "CustomerStreet": "string"
 }
 
 dim_date_table_schema = {
@@ -71,11 +77,12 @@ def apply_schema(df, schema):
     for column, dtype in schema.items():
         if column in df.columns:
             if dtype == "int":
-                df[column] = pd.to_numeric(df[column], errors='coerce').fillna(0).astype(int)
+                df = df.withColumn(column, col(column).cast("integer"))
+                df = df.fillna(0, subset=[column])
             elif dtype == "float":
-                df[column] = pd.to_numeric(df[column], errors='coerce').astype(float)
+                df = df.withColumn(column, col(column).cast("float"))
             else:
-                df[column] = df[column].astype(dtype)
+                df = df.withColumn(column, col(column).cast(dtype))
     return df
 
 
@@ -92,32 +99,32 @@ parquet_files = {
 }
 
 
-def transform_dim_customer(fileName, schema, file_path, id_col):
-    df = pd.read_parquet(f"data/silver/{fileName}", engine="pyarrow")
+def transform_dim_customer(folder_path, schema, parquet_files, id_col):
+    df =  spark.read.parquet(f"abfss://costcocontainer@costcodatastoragegen2.dfs.core.windows.net/silverstorage/{folder_path}")
     df = apply_schema(df, schema).drop_duplicates(subset=[id_col])
-    df = df[schema.keys()]
-    new_file_path = f"data/gold/{file_path}"
-    df.to_parquet(new_file_path, engine='pyarrow', index=False)
+    df = df.select([col for col in schema.keys()])
+    new_file_path = f"abfss://costcocontainer@costcodatastoragegen2.dfs.core.windows.net/goldstorage/{parquet_files}"
+    df.write.mode("overwrite").parquet(new_file_path)
     print(f"Processed and saved: {new_file_path}")
 
 
-transform_dim_customer("Customer_Table.parquet",
+transform_dim_customer("dbo.Customer_Table.parquet",
                        dim_customer_detail_table_schema,
                        "dim_customer_detail_table.parquet",
                        "CustomerId")
-transform_dim_customer("Customer_Table.parquet",
+transform_dim_customer("dbo.Customer_Table.parquet",
                        dim_customer_location_table_schema,
                        "dim_customer_location_table.parquet",
                        "CustomerZipcode")
-transform_dim_customer("Orders_Table.parquet",
+transform_dim_customer("dbo.Orders_Table.parquet",
                        dim_order_item_table_schema,
                        "dim_order_item_table.parquet",
                        "OrderId")
-transform_dim_customer("Orders_Table.parquet",
+transform_dim_customer("dbo.Orders_Table.parquet",
                        dim_order_detail_table_schema,
                        "dim_order_detail_table.parquet",
                        "OrderId")
-transform_dim_customer("Orders_Table.parquet",
+transform_dim_customer("dbo.Orders_Table.parquet",
                        dim_shipping_table_schema, "dim_shipping_table.parquet",
                        "OrderId")
 # transform_dim_customer("Orders_Table.parquet",
