@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/transform/sql_script/Create_table.sql" dialect="AZURE" />
-    <file url="file://$PROJECT_DIR$/transform/sql_script/change_data_type.sql" dialect="AZURE" />
-    <file url="file://$PROJECT_DIR$/transform/sql_script/ingest_data.sql" dialect="AZURE" />
-    <file url="file://$PROJECT_DIR$/transform/sql_script/insert_table.sql" dialect="AZURE" />
+    <file url="file://$PROJECT_DIR$/airflow/dags/sql_script/Create_table.sql" dialect="AZURE" />
+    <file url="file://$PROJECT_DIR$/airflow/dags/sql_script/change_data_type.sql" dialect="AZURE" />
+    <file url="file://$PROJECT_DIR$/airflow/dags/sql_script/ingest_data.sql" dialect="AZURE" />
+    <file url="file://$PROJECT_DIR$/airflow/dags/sql_script/insert_table.sql" dialect="AZURE" />
   </component>
 </project>
