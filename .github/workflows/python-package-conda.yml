@@ -24,7 +24,7 @@ jobs:
         conda list
 
     - name: Set environment variables
-      run: echo "FOLDER_GOLD_PATH=$(pwd)/data/gold" >> $GITHUB_ENV
+      run: echo "FOLDER_GOLD_PATH=$(pwd)/airflow/data/gold" >> $GITHUB_ENV
 
     - name: Run pytest
       env:
