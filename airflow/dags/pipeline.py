@@ -55,7 +55,7 @@ with DAG(
             connection_string="DefaultEndpointsProtocol=https;AccountName=costcodatastoragegen2;AccountKey=XFCyRFgYIsUBcBequ4aNQdTiKaYE3P7WMOtzgdX31Li3Dtu9y8DGcc1fdjZa8EUz12ja+pvezqGQ+AStLB56SA==;EndpointSuffix=core.windows.net",
             container_name="costcocontainer",
             local_folder_path="/opt/airflow/gold",
-            destination_path_in_blob="test"
+            destination_path_in_blob="final_test"
         )
 
 

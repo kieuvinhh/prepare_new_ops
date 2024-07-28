@@ -5,7 +5,8 @@ from azure.storage.blob import BlobServiceClient, ContainerClient
 connection_string = "your_connection_string"
 container_name = "your_container_name"
 local_folder_path = "/opt/airflow/gold"
-destination_path_in_blob = "gold"
+destination_path_in_blob = "final_test"
+
 
 def upload_files_to_adls_gen2(connection_string, container_name, local_folder_path, destination_path_in_blob):
     try:
